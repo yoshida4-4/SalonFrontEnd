@@ -24,32 +24,37 @@ export const ReserveDisplay = () => {
     return result
   }
 
-/** NOTE: location(Japan)を設定する */
-dayjs.locale(ja);
-// 表示される最初の日付をfirstDateとして設定
-const firstDate = dayjs("2024-12-01");
-// console.log(typeof firstDate);
+  /** NOTE: location(Japan)を設定する */
+  dayjs.locale(ja);
+  // 表示される最初の日付をfirstDateとして設定
+  const firstDate = dayjs("2024-12-01");
 
-// 日付と予約時刻（埋まり具合）は二重配列とする
-// 日付の配列（親）を作成
-let daysArray = new Array(10)
-// console.log(daysArray)
+  // 入れ物作成（スタイリスト）
+  const stylistsArray = {}
+  for (let j = 1; j < 3; j++) {
+    stylistsArray[j] = new Array(10)
+    for (let i = 0; i < 10; i++) {
+      const custumDate = firstDate.add(i, "day").format("YYYY-MM-DD")
+      // 予約時刻の配列を格納（埋まり具合はboolean）
+      stylistsArray[j][custumDate] = Array.from(new Array(17)).map(() => true)
+    }
+  }
 
-// 予約時刻の配列を作成（埋まり具合はboolean）
-let dayArray = Array.from(new Array(17)).map(()=>'true')
-// console.log(dayArray)
+  // // 入れ物作成（日付）
+  // const daysArray = {}
+  // // 日付（親）に予約時刻（子）を格納していく
+  // for (let i = 0; i < 10; i++) {
+  //   const custumDate = firstDate.add(i, "day").format("YYYY-MM-DD")
+  //   // console.log( typeof custumDate);
+  //   // 予約時刻の配列を格納（埋まり具合はboolean）
+  //   daysArray[custumDate] = Array.from(new Array(17)).map(() => true)
+  //   // 変数をキーとして使用するためcustumDateを[]で囲っている
+  //   // daysArray[i] = {[custumDate]:dayArray}
+  // }
+  // console.log(daysArray)
+  // console.log(reserveObject)
 
-// 日付（親）に予約時刻（子）を格納していく
-for(let i = 0; i < 10; i++) {
-  const custumDate = firstDate.add(i, "day").format("YYYY-MM-DD")
-  // console.log(custumDate);
-
-  // 変数をキーとして使用するためcustumDateを[]で囲っている
-  daysArray[i] = {[custumDate]:dayArray}
-}
-console.log(daysArray)
-
-//   const today = new Date('2024-12-31');
+  //   const today = new Date('2024-12-31');
   // let today = new Date('2024-12-01');
   // today.setDate(today.getDate()+1)
   // console.log(today.toLocaleDateString())
@@ -57,7 +62,7 @@ console.log(daysArray)
   // console.log(today.getMonth()+1)
   // console.log(today.getDate())
 
-  
+
   // let daysArray
   // for(let i = 1; i < 11; i++) {
   //   // daysArray[i] =
@@ -68,23 +73,70 @@ console.log(daysArray)
   // }
 
 
-//   for(let i = 1; i < 11; i++) {
-//     daysArray.
-//   }
+  //   for(let i = 1; i < 11; i++) {
+  //     daysArray.
+  //   }
 
+  // for (let i = 0; i < reservations.length; i++) {
+  // console.log(reservations[i].date)
+  // console.log(daysArray[reservations[i].date])
+  // }
+
+  // const results = reservations.map(reservation => {
+  //   // console.log(daysArray[reservation.date])
+  //   for (let i = 0; i < reservation.service.duration; i++) {
+  //     // console.log(daysArray[reservation.date][reservation.start_flame])
+  //     daysArray[reservation.date][reservation.start_flame + i] = false
+
+  //   }
+  //   return daysArray
+  // });
+
+  const results = reservations.map(reservation => {
+    // console.log(daysArray[reservation.date])
+    for (let i = 0; i < reservation.service.duration; i++) {
+      // console.log(daysArray[reservation.date][reservation.start_flame])
+      stylistsArray[reservation.stylist_id][reservation.date][reservation.start_flame + i] = false
+
+    }
+    return stylistsArray
+  });
+
+  // const results2 = Object.keys(daysArray).map((date) => {
+
+    //   return reservations.map(reservation => {
+    //     // console.log(daysArray[reservation.date])
+    //     for (let i = 0; i < reservation.service.duration; i++) {
+    //       // console.log(daysArray[reservation.date][reservation.start_flame])
+    //       daysArray[date][reservation.start_flame + i] = false
+
+    //     }
+    //     return daysArray
+    //   })
+  // })
+
+  console.log(stylistsArray)
+  // console.log(results)
 
   return (
     <>
-      {reservations.map(reservation => (
+      {/* {reservations.map(reservation => (
         <div>
           <h3>{reservation.service.name}</h3>
           <div>{reservation.date}</div>
-          {/* <div>{reservation.publisher}</div>
+          <div>{reservation.start_flame}</div>
+          <div>{reservation.service.duration}</div>
+          <div>{reservation.publisher}</div>
           <div>{reservation.year}</div>
-          <div>{reservation.genre}</div> */}
+          <div>{reservation.genre}</div>
         </div>
-      )
-      )}
+      ))}
+
+      {results.map(result => (
+        <div>
+          {/* <div>{result[0]}</div>
+        </div>
+      ))}*/}
     </>
   )
 
