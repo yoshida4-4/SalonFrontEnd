@@ -3,6 +3,7 @@ import axios from 'axios';
 /** Day.js 関連の import */
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
+import { ReserveTable } from './ReserveTable.jsx'
 
 
 
@@ -10,7 +11,7 @@ export const ReserveDisplay = () => {
   const url = 'http://127.0.0.1:8000/api/aaaa'
 
   const [reservations, setReservations] = useState([])
-
+  const [stylist, setStylist] = useState(1);
   useEffect(() => {
     getReservations();
   }, [])
@@ -38,6 +39,12 @@ export const ReserveDisplay = () => {
       // 予約時刻の配列を格納（埋まり具合はboolean）
       stylistsArray[j][custumDate] = Array.from(new Array(17)).map(() => true)
     }
+  }
+
+  const changeStylist = (value) => {
+    setStylist(value)
+    console.log(value)
+    console.log(stylist)
   }
 
   // // 入れ物作成（日付）
@@ -94,7 +101,7 @@ export const ReserveDisplay = () => {
 
   const results = reservations.map(reservation => {
     // console.log(daysArray[reservation.date])
-    for (let i = 0; i < reservation.service.duration; i++) {
+    for (let i = -1; i < reservation.service.duration; i++) {
       // console.log(daysArray[reservation.date][reservation.start_flame])
       stylistsArray[reservation.stylist_id][reservation.date][reservation.start_flame + i] = false
 
@@ -104,18 +111,18 @@ export const ReserveDisplay = () => {
 
   // const results2 = Object.keys(daysArray).map((date) => {
 
-    //   return reservations.map(reservation => {
-    //     // console.log(daysArray[reservation.date])
-    //     for (let i = 0; i < reservation.service.duration; i++) {
-    //       // console.log(daysArray[reservation.date][reservation.start_flame])
-    //       daysArray[date][reservation.start_flame + i] = false
+  //   return reservations.map(reservation => {
+  //     // console.log(daysArray[reservation.date])
+  //     for (let i = 0; i < reservation.service.duration; i++) {
+  //       // console.log(daysArray[reservation.date][reservation.start_flame])
+  //       daysArray[date][reservation.start_flame + i] = false
 
-    //     }
-    //     return daysArray
-    //   })
+  //     }
+  //     return daysArray
+  //   })
   // })
 
-  console.log(stylistsArray)
+  // console.log(stylistsArray)
   // console.log(results)
 
   return (
@@ -137,6 +144,17 @@ export const ReserveDisplay = () => {
           {/* <div>{result[0]}</div>
         </div>
       ))}*/}
+
+      <label>
+        スタイリストを選択：
+        <select onChange={ e => changeStylist(e.target.value)}>
+          <option value="1">a</option>
+          <option value="2">b</option>
+        </select>
+      </label>
+      {// array={{stylistsArray}}の方がいい説
+        <ReserveTable array={stylistsArray[stylist]} today={firstDate} stylist={stylist}/>
+      }
     </>
   )
 
