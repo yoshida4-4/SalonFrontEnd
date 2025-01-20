@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from '../api/axios.jsx';
+import axios from 'axios';
+
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -9,14 +10,23 @@ export const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
+        axios.defaults.baseURL = 'http://127.0.0.1:8000'; // LaravelバックエンドのURL
+        axios.defaults.withCredentials = true; // クッキーを利用する
+        // axios.defaults.xsrfCookieName = 'XSRF-TOKEN'; // LaravelのCSRFトークンのクッキー名
+        // axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN'; // ヘッダーに設定するトークン名
+
         try {
             // CSRF Cookie の取得
             await axios.get('/sanctum/csrf-cookie');
 
             // ログイン API の呼び出し
-            const response = await axios.post('/login', {
+            const response = await axios.post('api/login', {
                 email,
                 password,
+                }, {
+                //     withCredentials: true,
+                    xsrfCookieName: 'XSRF-TOKEN',
+                    xsrfHeaderName: 'X-XSRF-TOKEN'
             });
 
             console.log('ログイン成功:', response.data);
