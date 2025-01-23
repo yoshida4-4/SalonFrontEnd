@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,19 +19,21 @@ export const Login = () => {
 
         try {
             // CSRF Cookie の取得
-            await axios.get('/sanctum/csrf-cookie');
+            await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie');
 
             // ログイン API の呼び出し
-            const response = await axios.post('api/login', {
+            const response = await axios.post('http://127.0.0.1:8000/api/login', {
                 email,
                 password,
                 }, {
-                //     withCredentials: true,
+                    withCredentials: true,
+                    withXSRFToken: true,
                     xsrfCookieName: 'XSRF-TOKEN',
                     xsrfHeaderName: 'X-XSRF-TOKEN'
             });
 
             console.log('ログイン成功:', response.data);
+            navigate("/reserve")
         } catch (err) {
             setError('ログインに失敗しました。');
             console.error(err);
