@@ -3,15 +3,23 @@ import axios from 'axios';
 /** Day.js 関連の import */
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
+import { useLocation } from "react-router-dom"
 import { ReserveTable } from './ReserveTable.jsx'
 
 
 
 export const ReserveDisplay = () => {
+  // Loginしたユーザーのidを受け取る
+  const location = useLocation()
+  const [userID, setUserID] = useState(location.state)
+  // メニュー選択用
+  const [service, setService] = useState(1);
+
   const url = 'http://127.0.0.1:8000/api/aaaa'
 
   const [reservations, setReservations] = useState([])
   const [stylist, setStylist] = useState(1);
+
   useEffect(() => {
     getReservations();
   }, [])
@@ -24,6 +32,18 @@ export const ReserveDisplay = () => {
     setReservations(result)
     return result
   }
+
+  const serviceList = [
+    "カット：￥5,000～",
+    "カットトリートメント：￥8,000～",
+    "カットカラー：￥10,000～",
+    "カットカラートリートメント：￥12,000～",
+    "カットパーマ：￥11,000～"]
+
+  const stylistList = [
+    "山田太郎",
+    "佐藤花子"
+  ]
 
   /** NOTE: location(Japan)を設定する */
   dayjs.locale(ja);
@@ -44,67 +64,19 @@ export const ReserveDisplay = () => {
   const changeStylist = (value) => {
     setStylist(value)
     console.log(value)
-    console.log(stylist)
+    // console.log(stylist)
   }
 
-  // // 入れ物作成（日付）
-  // const daysArray = {}
-  // // 日付（親）に予約時刻（子）を格納していく
-  // for (let i = 0; i < 10; i++) {
-  //   const custumDate = firstDate.add(i, "day").format("YYYY-MM-DD")
-  //   // console.log( typeof custumDate);
-  //   // 予約時刻の配列を格納（埋まり具合はboolean）
-  //   daysArray[custumDate] = Array.from(new Array(17)).map(() => true)
-  //   // 変数をキーとして使用するためcustumDateを[]で囲っている
-  //   // daysArray[i] = {[custumDate]:dayArray}
-  // }
-  // console.log(daysArray)
-  // console.log(reserveObject)
+  const changeService = (value) => {
+    setService(value)
+    console.log(value)
+    // console.log(service)
+  }
 
-  //   const today = new Date('2024-12-31');
-  // let today = new Date('2024-12-01');
-  // today.setDate(today.getDate()+1)
-  // console.log(today.toLocaleDateString())
-  // console.log(today.getFullYear())
-  // console.log(today.getMonth()+1)
-  // console.log(today.getDate())
-
-
-  // let daysArray
-  // for(let i = 1; i < 11; i++) {
-  //   // daysArray[i] =
-  // }
-  // let dayArray = new Object();
-  // for(let i = 1; i < 18; i++) {
-  //   dayArray[i] = "";
-  // }
-
-
-  //   for(let i = 1; i < 11; i++) {
-  //     daysArray.
-  //   }
-
-  // for (let i = 0; i < reservations.length; i++) {
-  // console.log(reservations[i].date)
-  // console.log(daysArray[reservations[i].date])
-  // }
-
-  // const results = reservations.map(reservation => {
-  //   // console.log(daysArray[reservation.date])
-  //   for (let i = 0; i < reservation.service.duration; i++) {
-  //     // console.log(daysArray[reservation.date][reservation.start_flame])
-  //     daysArray[reservation.date][reservation.start_flame + i] = false
-
-  //   }
-  //   return daysArray
-  // });
-
+  // 予約表の内容をbooleanで設定
   const results = reservations.map(reservation => {
-    // console.log(daysArray[reservation.date])
     for (let i = -1; i < reservation.service.duration; i++) {
-      // console.log(daysArray[reservation.date][reservation.start_flame])
       stylistsArray[reservation.stylist_id][reservation.date][reservation.start_flame + i] = false
-
     }
     return stylistsArray
   });
@@ -147,13 +119,22 @@ export const ReserveDisplay = () => {
 
       <label>
         スタイリストを選択：
-        <select onChange={ e => changeStylist(e.target.value)}>
-          <option value="1">a</option>
-          <option value="2">b</option>
+        <select onChange={e => changeStylist(e.target.value)}>
+          <option value="1">{stylistList[0]}</option>
+          <option value="2">{stylistList[1]}</option>
+        </select>
+        <br />
+        メニューを選択：
+        <select onChange={e => changeService(e.target.value)}>
+          <option value="1">{serviceList[0]}</option>
+          <option value="2">{serviceList[1]}</option>
+          <option value="3">{serviceList[2]}</option>
+          <option value="4">{serviceList[3]}</option>
+          <option value="5">{serviceList[4]}</option>
         </select>
       </label>
       {// array={{stylistsArray}}の方がいい説
-        <ReserveTable array={stylistsArray[stylist]} today={firstDate} stylist={stylist}/>
+        <ReserveTable array={stylistsArray[stylist]} today={firstDate} stylist={stylist} stylistList={stylistList} user={userID} service={service} serviceList={serviceList}/>
       }
     </>
   )

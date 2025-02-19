@@ -14,6 +14,7 @@ import {
 /** Day.js 関連の import */
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
+import { JudgeReserve } from './JudgeReserve.jsx'
 
 export const ReserveTable = (props) => {
   // dayjs現状使用していない
@@ -34,11 +35,23 @@ export const ReserveTable = (props) => {
   const [open, setOpen] = useState(false);
   const [selectedDate, setselectedDate] = useState(null);
   const [selectedTime, setselectedTime] = useState(null);
+  // form送信用変数
+  const [selectedService, setSelectedService] = useState({
+    user_id:"",
+    stylist_id:"",
+    service_id:"",
+    date:"",
+    start_flame:"",
+    end_flame:"", // サービスから出すのかどうするのか未定
+  });
 
   // openをtrueにしてmodalを開く
-  const handleOpen = (col, row) => {
+  // 引数にcolIndexとrowIndex追加
+  const handleOpen = (col, row, colIndex, rowIndex) => {
     setselectedDate(col);
     setselectedTime(row);
+    console.log(col, colIndex, row, rowIndex)
+    // ここでselectedServiceに各要素を格納
     setOpen(true);
   }
   // openをfalseにしてmodalを閉じる
@@ -60,6 +73,26 @@ export const ReserveTable = (props) => {
     p: 4,
   };
 
+
+  const handleSelectChange = (e) => {
+    setSelectedService(e.target.value);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post("http://localhost/api/reservations", {
+        selectedService, // 選択された値を送信
+      });
+
+      if (response.status === 200) {
+        alert("予約が正常に送信されました！");
+      }
+    } catch (error) {
+      console.error("エラーが発生しました:", error);
+      alert("送信に失敗しました。");
+    }
+  }
 
   return (
     <div>
@@ -92,12 +125,19 @@ export const ReserveTable = (props) => {
                 {/* 行名のセル */}
                 {/* 時と分に分けてrowIndexから計算、分を00表示にするためslice使用 */}
                 <TableCell align="center">{9 + Math.floor(rowIndex / 2)}:{('00' + rowIndex % 2 * 30).slice(-2)}</TableCell>
-                {row.map((cell, colIndex) => (
-                  <TableCell key={colIndex} align="center" id={`${rowIndex + 1}-${colIndex + 1}`} onClick={() => handleOpen(dateList[colIndex], `${9 + Math.floor(rowIndex / 2)}:${('00' + rowIndex % 2 * 30).slice(-2)}`)}>
+                {row.map((cell, colIndex) => {
+                  // 次枠以降の値を取得
+                  const under1 = rows[rowIndex+1]?.[colIndex] ?? false;
+                  const under2 = rows[rowIndex+2]?.[colIndex] ?? false;
+                  return (
+                  <TableCell key={colIndex} align="center" id={`${rowIndex + 1}-${colIndex + 1}`} onClick={() => handleOpen(dateList[colIndex], `${9 + Math.floor(rowIndex / 2)}:${('00' + rowIndex % 2 * 30).slice(-2)}`, colIndex, rowIndex)}>
                     {/* cellはboolean、三項演算子 */}
-                    {cell ? '〇' : '×'}
+                    {/* {cell ? '〇' : '×'}
+                    {under1 ? '〇' : '×'} */}
+                    <JudgeReserve cell={cell} under1={under1} under2={under2} rowIndex={rowIndex} service={props.service}/>
+                    
                   </TableCell>
-                ))}
+                )})}
               </TableRow>
             ))}
           </TableBody>
@@ -106,18 +146,15 @@ export const ReserveTable = (props) => {
 
       <Modal open={open} onClose={handleClose}>
         <Box sx={modalStyle}>
-          <h2>予約確認画面</h2>
-          <p>予約日付：{selectedDate}</p>
-          <p>予約時刻：{selectedTime}</p>
-          <p>スタイリスト：{props.stylist}</p>
-          <select>
-            <option value="1">カット：￥5,000～</option>
-            <option value="2">カットトリートメント：￥8,000～</option>
-            <option value="3">カットカラー：￥10,000～</option>
-            <option value="4">カットカラートリートメント：￥12,000～</option>
-            <option value="5">カットパーマ：￥11,000～</option>
-          </select><br /><br />
-          <button>予約確定</button>
+          <form onSubmit={handleSubmit}>
+            <h2>予約確認画面</h2>
+            <p>予約日付：{selectedDate}</p>
+            <p>予約時刻：{selectedTime}</p>
+            <p>スタイリスト：{props.stylistList[props.stylist-1]}</p>
+            <p>メニュー：{props.serviceList[props.service-1]}</p>
+            <br /><br />
+            <button>予約確定</button>
+          </form>
         </Box>
       </Modal>
     </div>

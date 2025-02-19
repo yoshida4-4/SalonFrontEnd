@@ -33,7 +33,8 @@ export const Login = () => {
             });
 
             console.log('ログイン成功:', response.data);
-            navigate("/reserve")
+            // navigateでページ遷移する、その際ログインしたユーザーのidを第二引数で引き渡す
+            navigate("/reserve", {state: response.data.user.id})
         } catch (err) {
             setError('ログインに失敗しました。');
             console.error(err);
