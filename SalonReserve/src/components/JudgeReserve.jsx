@@ -9,12 +9,12 @@ export const JudgeReserve = (props) => {
     const rowIndex = props.rowIndex
     const service = props.service
 
-    let result = ""
+    // let result = ""
 
-    useEffect(() => {
-        console.log("a",service)
-        result = judge(service)
-    }, [service])
+    // useEffect(() => {
+    //     console.log("a",service)
+    //     result = judge(service)
+    // }, [service])
 
     // menuID1(枠2)
     const judge1 = (cell) => {
@@ -41,13 +41,17 @@ export const JudgeReserve = (props) => {
     }
 
     const judge = (service) => {
-        if(service === 1) {
+        // console.log("judge実行")
+        if(Number(service) === 1) {
+            // console.log(cell)
             return judge1(cell)
-        }
-        if(service === 2 || service === 3 || service === 5) {
+        }else if(Number(service) === 2 || Number(service) === 3 || Number(service) === 5) {
+            // console.log(cell)
+            // console.log(under1)
+            // console.log(rowIndex)
             return judge2(cell, under1, rowIndex)
-        }
-        if(service === 4) {
+        }else if(Number(service) === 4) {
+            // console.log(cell, under1, under2, rowIndex)
             return judge3(cell, under1, under2, rowIndex)
         }
     }
@@ -55,8 +59,6 @@ export const JudgeReserve = (props) => {
     return (
         <>
             <>{judge(service)}</>
-            <>{service}</>
-            <>{result}</>
         </>
     )
 }

@@ -1,5 +1,6 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import { Modal, Box } from "@mui/material";
 import {
   Table,
@@ -37,9 +38,9 @@ export const ReserveTable = (props) => {
   const [selectedTime, setselectedTime] = useState(null);
   // form送信用変数
   const [selectedService, setSelectedService] = useState({
-    user_id:"",
-    stylist_id:"",
-    service_id:"",
+    user_id:props.user,
+    stylist_id:props.stylist,
+    service_id:props.service,
     date:"",
     start_flame:"",
     end_flame:"", // サービスから出すのかどうするのか未定
@@ -52,8 +53,32 @@ export const ReserveTable = (props) => {
     setselectedTime(row);
     console.log(col, colIndex, row, rowIndex)
     // ここでselectedServiceに各要素を格納
+    // setSelectedService((prev)=> ({
+    //   ...prev,
+    //   ["date"]:col,
+    //   ["start_flame"]:rowIndex,
+    // }));
+
+    setSelectedService((prev) => {
+      const updatedService = { 
+        ...prev, 
+        // 日付をdate型としたとき
+        // ["date"]: new Date(col),
+        ["date"]: col,
+        ["start_flame"]: rowIndex 
+      };
+      // console.log("更新後の selectedService:", updatedService); // デバッグ用
+      return updatedService;
+    });
+
+    console.log(selectedService)
     setOpen(true);
   }
+
+  useEffect(() => {
+    console.log("現在の selectedService:", selectedService);
+  }, [selectedService]);
+
   // openをfalseにしてmodalを閉じる
   const handleClose = () => {
     setselectedDate(null);
