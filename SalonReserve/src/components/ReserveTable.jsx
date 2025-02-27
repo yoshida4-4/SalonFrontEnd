@@ -51,7 +51,7 @@ export const ReserveTable = (props) => {
   const handleOpen = (col, row, colIndex, rowIndex) => {
     setselectedDate(col);
     setselectedTime(row);
-    console.log(col, colIndex, row, rowIndex)
+    console.log(selectedService.user_id)
     // ここでselectedServiceに各要素を格納
     // setSelectedService((prev)=> ({
     //   ...prev,
@@ -104,11 +104,24 @@ export const ReserveTable = (props) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post("http://localhost/api/reservations", {
+
+      await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+
+    //   var axiosPost = axios.create({
+    //     xsrfHeaderName: "X-XSRF-TOKEN",
+    //     withCredentials: true
+    // })
+      console.log(selectedService)
+      const response = await axios.post("http://localhost:8000/api/reservations", {
+      // const response = await axiosPost("http://localhost:8000/api/reservations", {
         selectedService, // 選択された値を送信
-      });
+      } ,{
+        withCredentials: true,
+        withXSRFToken: true,
+        xsrfCookieName: 'XSRF-TOKEN',
+        xsrfHeaderName: 'X-XSRF-TOKEN'
+});
 
       if (response.status === 200) {
         alert("予約が正常に送信されました！");
