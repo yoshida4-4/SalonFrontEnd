@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
 import { useLocation } from "react-router-dom"
 import { ReserveTable } from './ReserveTable.jsx'
+import { ClassNames } from '@emotion/react';
+import styles from './styles.module.css'
 
 
 
@@ -82,7 +84,8 @@ export const ReserveDisplay = () => {
   });
 
   return (
-    <>
+    <div>
+      <h3>予約画面</h3>
       <label>
         スタイリストを選択：
         <select onChange={e => changeStylist(e.target.value)}>
@@ -102,7 +105,7 @@ export const ReserveDisplay = () => {
       {// array={{stylistsArray}}の方がいい説
         <ReserveTable array={stylistsArray[stylist]} today={firstDate} stylist={stylist} stylistList={stylistList} user={userID} service={service} serviceList={serviceList}/>
       }
-    </>
+    </div>
   )
 
 }

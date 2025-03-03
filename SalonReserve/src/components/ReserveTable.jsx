@@ -51,7 +51,8 @@ export const ReserveTable = (props) => {
   const handleOpen = (col, row, colIndex, rowIndex) => {
     setselectedDate(col);
     setselectedTime(row);
-    console.log(selectedService.user_id)
+    // console.log(selectedService.user_id)
+
     // ここでselectedServiceに各要素を格納
     // setSelectedService((prev)=> ({
     //   ...prev,
@@ -63,7 +64,6 @@ export const ReserveTable = (props) => {
       const updatedService = { 
         ...prev, 
         // 日付をdate型としたとき
-        // ["date"]: new Date(col),
         ["date"]: col,
         ["start_flame"]: rowIndex 
       };
@@ -138,13 +138,13 @@ export const ReserveTable = (props) => {
               {/* 左上スペース (空セル) */}
               <TableCell style={{ borderBottom: "none" }} />
               <TableCell colSpan={10} align="center" style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                予約画面
+                {/* 予約表 */}
               </TableCell>
             </TableRow>
             {/* 列名のヘッダー行 */}
             <TableRow>
               {/* 行名のヘッダー */}
-              <TableCell align="center">Row Name</TableCell>
+              <TableCell align="center"></TableCell>
               {dateList.map((time, colIndex) => (
                 <TableCell key={colIndex} align="center" id={`col${colIndex + 1}`}>
                   {time.slice(5)}
