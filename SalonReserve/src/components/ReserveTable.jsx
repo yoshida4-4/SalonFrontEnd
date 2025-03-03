@@ -108,13 +108,8 @@ export const ReserveTable = (props) => {
 
       await axios.get('http://localhost:8000/sanctum/csrf-cookie');
 
-    //   var axiosPost = axios.create({
-    //     xsrfHeaderName: "X-XSRF-TOKEN",
-    //     withCredentials: true
-    // })
       console.log(selectedService)
       const response = await axios.post("http://localhost:8000/api/reservations", {
-      // const response = await axiosPost("http://localhost:8000/api/reservations", {
         selectedService, // 選択された値を送信
       } ,{
         withCredentials: true,

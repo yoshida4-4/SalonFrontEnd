@@ -26,9 +26,6 @@ export const Aaa = () => {
         <div>
           <h3>{reservation.service.name}</h3>
           <div>{reservation.date}</div>
-          {/* <div>{reservation.publisher}</div>
-          <div>{reservation.year}</div>
-          <div>{reservation.genre}</div> */}
         </div>
       )
       )}

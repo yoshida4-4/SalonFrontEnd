@@ -81,42 +81,8 @@ export const ReserveDisplay = () => {
     return stylistsArray
   });
 
-  // const results2 = Object.keys(daysArray).map((date) => {
-
-  //   return reservations.map(reservation => {
-  //     // console.log(daysArray[reservation.date])
-  //     for (let i = 0; i < reservation.service.duration; i++) {
-  //       // console.log(daysArray[reservation.date][reservation.start_flame])
-  //       daysArray[date][reservation.start_flame + i] = false
-
-  //     }
-  //     return daysArray
-  //   })
-  // })
-
-  // console.log(stylistsArray)
-  // console.log(results)
-
   return (
     <>
-      {/* {reservations.map(reservation => (
-        <div>
-          <h3>{reservation.service.name}</h3>
-          <div>{reservation.date}</div>
-          <div>{reservation.start_flame}</div>
-          <div>{reservation.service.duration}</div>
-          <div>{reservation.publisher}</div>
-          <div>{reservation.year}</div>
-          <div>{reservation.genre}</div>
-        </div>
-      ))}
-
-      {results.map(result => (
-        <div>
-          {/* <div>{result[0]}</div>
-        </div>
-      ))}*/}
-
       <label>
         スタイリストを選択：
         <select onChange={e => changeStylist(e.target.value)}>

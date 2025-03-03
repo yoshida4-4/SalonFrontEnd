@@ -14,8 +14,6 @@ export const Login = () => {
 
         axios.defaults.baseURL = 'http://127.0.0.1:8000'; // LaravelバックエンドのURL
         axios.defaults.withCredentials = true; // クッキーを利用する
-        // axios.defaults.xsrfCookieName = 'XSRF-TOKEN'; // LaravelのCSRFトークンのクッキー名
-        // axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN'; // ヘッダーに設定するトークン名
 
         try {
             // CSRF Cookie の取得
@@ -52,6 +50,7 @@ export const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    <>（aaaa@aaaa）</>
                 </div>
                 <div>
                     <label>Password:</label>
@@ -60,6 +59,7 @@ export const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <>（aaaa）</>
                 </div>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <button type="submit">ログイン</button>
