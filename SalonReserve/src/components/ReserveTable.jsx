@@ -16,10 +16,10 @@ import {
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
 import { JudgeReserve } from './JudgeReserve.jsx'
+import styles from './styles.module.css'
 
 export const ReserveTable = (props) => {
   // dayjs現状使用していない
-  /** NOTE: location(Japan)を設定する */
   dayjs.locale(ja);
 
   // propsの配列からキーとなっている日付のみ抽出
@@ -134,13 +134,14 @@ export const ReserveTable = (props) => {
         <Table>
           <TableHead>
             {/* 左上スペースと列グループタイトル */}
+            {/*
             <TableRow>
-              {/* 左上スペース (空セル) */}
               <TableCell style={{ borderBottom: "none" }} />
               <TableCell colSpan={10} align="center" style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                {/* 予約表 */}
+                予約表
               </TableCell>
             </TableRow>
+            */}
             {/* 列名のヘッダー行 */}
             <TableRow>
               {/* 行名のヘッダー */}
@@ -154,7 +155,9 @@ export const ReserveTable = (props) => {
           </TableHead>
           <TableBody>
             {rows.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <TableRow key={rowIndex} sx={{
+                backgroundColor: rowIndex % 2 === 1 ? "white" : "#f5f5f5", // 偶数:白, 奇数:グレー
+              }}>
                 {/* 行名のセル */}
                 {/* 時と分に分けてrowIndexから計算、分を00表示にするためslice使用 */}
                 <TableCell align="center">{9 + Math.floor(rowIndex / 2)}:{('00' + rowIndex % 2 * 30).slice(-2)}</TableCell>
@@ -164,11 +167,8 @@ export const ReserveTable = (props) => {
                   const under2 = rows[rowIndex+2]?.[colIndex] ?? false;
                   return (
                   <TableCell key={colIndex} align="center" id={`${rowIndex + 1}-${colIndex + 1}`} onClick={() => handleOpen(dateList[colIndex], `${9 + Math.floor(rowIndex / 2)}:${('00' + rowIndex % 2 * 30).slice(-2)}`, colIndex, rowIndex)}>
-                    {/* cellはboolean、三項演算子 */}
-                    {/* {cell ? '〇' : '×'}
-                    {under1 ? '〇' : '×'} */}
+                    {/* cell内容判定用コンポーネント */}
                     <JudgeReserve cell={cell} under1={under1} under2={under2} rowIndex={rowIndex} service={props.service}/>
-                    
                   </TableCell>
                 )})}
               </TableRow>

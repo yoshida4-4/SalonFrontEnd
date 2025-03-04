@@ -85,15 +85,16 @@ export const ReserveDisplay = () => {
 
   return (
     <div>
-      <h3>予約画面</h3>
-      <label>
-        スタイリストを選択：
+      <h2>予約画面</h2>
+      <div>
+        スタイリストを選択：<br />
         <select onChange={e => changeStylist(e.target.value)}>
           <option value="1">{stylistList[0]}</option>
           <option value="2">{stylistList[1]}</option>
         </select>
         <br />
-        メニューを選択：
+        <br />
+        メニューを選択：<br />
         <select onChange={e => changeService(e.target.value)}>
           <option value="1">{serviceList[0]}</option>
           <option value="2">{serviceList[1]}</option>
@@ -101,7 +102,7 @@ export const ReserveDisplay = () => {
           <option value="4">{serviceList[3]}</option>
           <option value="5">{serviceList[4]}</option>
         </select>
-      </label>
+      </div>
       {// array={{stylistsArray}}の方がいい説
         <ReserveTable array={stylistsArray[stylist]} today={firstDate} stylist={stylist} stylistList={stylistList} user={userID} service={service} serviceList={serviceList}/>
       }
